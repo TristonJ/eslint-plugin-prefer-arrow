@@ -1,0 +1,11 @@
+{
+  "name": "eslint-plugin-prefer-arrow",
+  "version": "1.0.0",
+  "description": "Prefer arrow functions where a bound 'this' is not needed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Triston Jones",
+  "license": "ISC"
+}
