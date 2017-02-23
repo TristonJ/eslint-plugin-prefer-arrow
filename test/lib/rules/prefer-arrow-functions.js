@@ -23,8 +23,8 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'class obj {constructor(foo){this.foo = foo;}}; obj.prototype = {func: function() {}};'
   ],
   invalid: [
-    {code: 'function foo() { return "Hello!"; }', errors: ['Prefer using arrow functions over plain functions']},
-    {code: 'function foo() { return arguments; }', errors: ['Prefer using arrow functions over plain functions']},
+    {code: 'function foo() { return "Hello!"; }', errors: ['Use const or class constructors instead of named functions']},
+    {code: 'function foo() { return arguments; }', errors: ['Use const or class constructors instead of named functions']},
     {code: 'var foo = function() { return "World"; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]}
