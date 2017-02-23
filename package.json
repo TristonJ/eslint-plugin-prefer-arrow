@@ -1,11 +1,17 @@
 {
   "name": "eslint-plugin-prefer-arrow",
   "version": "1.0.0",
-  "description": "Prefer arrow functions where a bound 'this' is not needed",
+  "description": "Prefer arrow functions in most cases",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/lib/rules"
   },
-  "author": "Triston Jones",
-  "license": "ISC"
+  "author": "Triston Jones <contact@tristonjones.com>",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": ">=0.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.16.1"
+  }
 }
