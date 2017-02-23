@@ -13,9 +13,14 @@
   "author": "Triston Jones <contact@tristonjones.com>",
   "license": "MIT",
   "peerDependencies": {
-    "eslint": ">=0.8.0"
+    "eslint": "^2.0.0 || ^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^3.16.1"
-  }
+    "eslint": "^2.0.0 || ^3.0.0"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "es6"
+  ]
 }
