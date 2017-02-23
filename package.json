@@ -6,6 +6,10 @@
   "scripts": {
     "test": "mocha test/lib/rules"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TristonJ/eslint-plugin-prefer-arrow.git"
+  },
   "author": "Triston Jones <contact@tristonjones.com>",
   "license": "MIT",
   "peerDependencies": {
