@@ -19,14 +19,14 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'var foo = (bar, fuzz) => bar + fuzz',
     '["Hello", "World"].reduce((p, a) => p + " " + a);',
     'var foo = (...args) => args',
-    'var obj = {constructor: ()=>{}}; obj.prototype.func = function() {};',
-    'var obj = {constructor: ()=>{}}; obj.prototype = {func: function() {}};'
+    'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};',
+    'class obj {constructor(foo){this.foo = foo;}}; obj.prototype = {func: function() {}};'
   ],
   invalid: [
     {code: 'function foo() { return "Hello!"; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'function foo() { return arguments; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'var foo = function() { return "World"; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
-    {code: 'var obj = {constructor: ()=>{}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]}
+    {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]}
   ]
 });
