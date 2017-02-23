@@ -11,7 +11,7 @@ Install the npm package
 npm install -g eslint-plugin-prefer-arrow
 
 # If npm is installed locally
-npm install -d eslint-plugin-prefer-arrow
+npm install -D eslint-plugin-prefer-arrow
 ```
 
 Add the plugin to the `plugins` section in your .eslintrc
