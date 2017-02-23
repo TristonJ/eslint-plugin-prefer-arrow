@@ -1,6 +1,8 @@
 # eslint-plugin-prefer-arrow
 ESLint plugin to prefer arrow functions. By default, the plugin allows usage of `function` as a member of an Object's prototype.
 
+The purpose of this plugin is to encourage cleaner code by using arrow functions, keeping scope and usage of `this` very clear. 
+
 # Installation
 
 Install the npm package
