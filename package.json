@@ -16,7 +16,8 @@
     "eslint": "^2.0.0 || ^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^2.0.0 || ^3.0.0"
+    "eslint": "^2.0.0 || ^3.0.0",
+    "mocha": "^3.4.1"
   },
   "keywords": [
     "eslint",
