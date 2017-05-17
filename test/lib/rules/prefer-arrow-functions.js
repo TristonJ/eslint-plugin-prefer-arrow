@@ -40,14 +40,18 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]},
     ...[
-      //TODO: export default function() {}
-      //TODO: closing brace on its own line
       ['function foo() { return 3; }', 'const foo = () => 3;'],
+      ['export default function() { return 3; }', 'export default () => 3;'],
+      ['export default function xyz() { return 3; }', 'export default () => 3;'],
         ['function foo(a) { return 3 }', 'const foo = (a) => 3;'],
+        ['function foo(a) {\n  return 3;\n}', 'const foo = (a) => 3;'],
+        ['function foo(a) {\n  return 3\n}', 'const foo = (a) => 3;'],
         ['function foo(a) { return 3; }', 'const foo = (a) => 3;'],
         ['function foo(a) { return {a: false}; }', 'const foo = (a) => ({a: false});'],
         ['function foo(a) { return {a: false} }', 'const foo = (a) => ({a: false});'],
         ['var foo = function() { return "World"; }', 'var foo = () => "World"'],
+        ['var foo = function() {\n  return "World";\n}', 'var foo = () => "World"'],
+        ['var foo = function() {\n  return "World"\n}', 'var foo = () => "World"'],
         ['var foo = function() { return {a: false} }', 'var foo = () => ({a: false})'],
         ['var foo = function() { return {a: false}; }', 'var foo = () => ({a: false})'],
         ['var foo = function() { return "World"; };', 'var foo = () => "World";'],
@@ -56,17 +60,18 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
         ['var foo = function () { return () => false }', 'var foo = () => () => false'],
         [
           '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*/function/*8*/ /*9*/x/*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/{/*17*/ /*18*/return/*19*/ /*20*/false/*21*/;/*22*/ /*23*/}/*24*/;/*25*/',
-          '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*//*8*/ /*9*//*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/=>/*17*/ /*18*//*19*/ /*20*/false/*21*//*22*/ /*23*//*24*/;/*25*/',
+          '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*//*8*/ /*9*//*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/=> /*17*/ /*18*//*19*/ /*20*/false/*21*//*22*/ /*23*//*24*/;/*25*/',
         ],
         [
           '/*1*/function/*2*/ /*3*/foo/*4*/(/*5*/a/*6*/)/*7*/ /*8*/\{/*9*/ /*10*/return/*11*/ /*12*/false/*13*/;/*14*/ /*15*/}/*16*/',
-          '/*1*/const/*2*/ /*3*/foo/*4*/ = (/*5*/a/*6*/)/*7*/ /*8*/=>/*9*/ /*10*//*11*/ /*12*/false/*13*//*14*/ /*15*/;/*16*/'
+          '/*1*/const/*2*/ /*3*/foo/*4*/ = (/*5*/a/*6*/)/*7*/ /*8*/=> /*9*/ /*10*//*11*/ /*12*/false/*13*//*14*/ /*15*/;/*16*/'
         ],
         ['function foo(a) { return a && (3 + a()) ? true : 99; }', 'const foo = (a) => a && (3 + a()) ? true : 99;'],
     ].map(io => Object.assign(
       {
         errors: ['Prefer using arrow functions over plain functions which only return a value'],
-        output: io[1]
+        output: io[1],
+        parserOptions: {sourceType: 'module'}
       },
       singleReturnOnly(io[0])
     ))
