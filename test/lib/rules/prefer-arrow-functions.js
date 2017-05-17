@@ -40,19 +40,24 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]},
     ...[
-        ['function foo() { return 3; }', 'const foo = () => 3;'],
+      //TODO: export default function() {}
+      //TODO: closing brace on its own line
+      ['function foo() { return 3; }', 'const foo = () => 3;'],
         ['function foo(a) { return 3 }', 'const foo = (a) => 3;'],
         ['function foo(a) { return 3; }', 'const foo = (a) => 3;'],
+        ['function foo(a) { return {a: false}; }', 'const foo = (a) => ({a: false});'],
+        ['function foo(a) { return {a: false} }', 'const foo = (a) => ({a: false});'],
         ['var foo = function() { return "World"; }', 'var foo = () => "World"'],
+        ['var foo = function() { return {a: false} }', 'var foo = () => ({a: false})'],
+        ['var foo = function() { return {a: false}; }', 'var foo = () => ({a: false})'],
         ['var foo = function() { return "World"; };', 'var foo = () => "World";'],
-        ['var foo = function x() { return "World"; };', 'var foo = /*x*/() => "World";'],
+        ['var foo = function x() { return "World"; };', 'var foo = () => "World";'],
         ['var foo = function () { return function(a) { a() } }', 'var foo = () => function(a) { a() }'],
         ['var foo = function () { return () => false }', 'var foo = () => () => false'],
         [
           '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*/function/*8*/ /*9*/x/*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/{/*17*/ /*18*/return/*19*/ /*20*/false/*21*/;/*22*/ /*23*/}/*24*/;/*25*/',
-          '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*//*8*/ /*9*//*x*//*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/=>/*17*/ /*18*//*19*/ /*20*/false/*21*//*22*/ /*23*//*24*/;/*25*/',
+          '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*//*8*/ /*9*//*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/=>/*17*/ /*18*//*19*/ /*20*/false/*21*//*22*/ /*23*//*24*/;/*25*/',
         ],
-        //TODO: nested function
         [
           '/*1*/function/*2*/ /*3*/foo/*4*/(/*5*/a/*6*/)/*7*/ /*8*/\{/*9*/ /*10*/return/*11*/ /*12*/false/*13*/;/*14*/ /*15*/}/*16*/',
           '/*1*/const/*2*/ /*3*/foo/*4*/ = (/*5*/a/*6*/)/*7*/ /*8*/=>/*9*/ /*10*//*11*/ /*12*/false/*13*//*14*/ /*15*/;/*16*/'
