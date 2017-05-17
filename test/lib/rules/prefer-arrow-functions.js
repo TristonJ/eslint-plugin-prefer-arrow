@@ -5,9 +5,9 @@
 
 'use strict';
 
-const singleReturnOnly = code => ({
+const singleReturnOnly = (code, extraRuleOptions) => ({
   code,
-  options: [{singleReturnOnly: true}],
+  options: [Object.assign({singleReturnOnly: true}, extraRuleOptions)],
   parserOptions: {sourceType: 'module'}
 });
 
@@ -37,7 +37,8 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       'function foo(bar) {bar(); return bar()}',
       'class MyClass { foo(bar) {bar(); return bar()} }',
       'var MyClass = { foo(bar) {bar(); return bar()} }',
-      'export default function xyz() { return 3; }'
+      'export default function xyz() { return 3; }',
+      'class MyClass { render(a, b) { return 3; } }'
     ].map(singleReturnOnly)
   ],
   invalid: [
@@ -48,7 +49,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]},
     ...[
       // Make sure it works with ES6 classes & functions declared in object literals
-      ['class MyClass { render(a, b) { return 3; } }', 'class MyClass { render = (a, b) => 3; }'],
+      ['class MyClass { render(a, b) { return 3; } }', 'class MyClass { render = (a, b) => 3; }', {classPropertiesAllowed: true}],
       ['var MyClass = { render(a, b) { return 3; }, b: false }', 'var MyClass = { render: (a, b) => 3, b: false }'],
 
       // Make sure named function declarations work
@@ -95,7 +96,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
         errors: ['Prefer using arrow functions over plain functions which only return a value'],
         output: inputOutput[1]
       },
-      singleReturnOnly(inputOutput[0])
+      singleReturnOnly(inputOutput[0], inputOutput[2])
     ))
   ]
 });
