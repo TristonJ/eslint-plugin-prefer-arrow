@@ -58,6 +58,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
         ['var foo = function x() { return "World"; };', 'var foo = () => "World";'],
         ['var foo = function () { return function(a) { a() } }', 'var foo = () => function(a) { a() }'],
         ['var foo = function () { return () => false }', 'var foo = () => () => false'],
+        ['class MyClass { render(a, b) { return 3; } }', 'class MyClass { render = (a, b) => 3; }'],
         [
           '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*/function/*8*/ /*9*/x/*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/{/*17*/ /*18*/return/*19*/ /*20*/false/*21*/;/*22*/ /*23*/}/*24*/;/*25*/',
           '/*1*/var/*2*/ /*3*/foo/*4*/ /*5*/=/*6*/ /*7*//*8*/ /*9*//*10*/(/*11*/a/*12*/, /*13*/b/*14*/)/*15*/ /*16*/=> /*17*/ /*18*//*19*/ /*20*/false/*21*//*22*/ /*23*//*24*/;/*25*/',
