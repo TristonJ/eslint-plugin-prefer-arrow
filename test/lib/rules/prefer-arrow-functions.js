@@ -36,7 +36,8 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       'function foo() {}',
       'function foo(bar) {bar(); return bar()}',
       'class MyClass { foo(bar) {bar(); return bar()} }',
-      'var MyClass = { foo(bar) {bar(); return bar()} }'
+      'var MyClass = { foo(bar) {bar(); return bar()} }',
+      'export default function xyz() { return 3; }'
     ].map(singleReturnOnly)
   ],
   invalid: [
@@ -57,7 +58,6 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
 
       // Eslint treats export default as a special form of function declaration
       ['export default function() { return 3; }', 'export default () => 3;'],
-      ['export default function xyz() { return 3; }', 'export default () => 3;'],
 
       // Sanity check - make sure complex logic works
       ['function foo(a) { return a && (3 + a()) ? true : 99; }', 'const foo = (a) => a && (3 + a()) ? true : 99;'],
