@@ -5,7 +5,11 @@
 
 'use strict';
 
-const singleReturnOnly = code => ({code, options: [{singleReturnOnly: true}], parserOptions: {sourceType: 'module'}});
+const singleReturnOnly = code => ({
+  code,
+  options: [{singleReturnOnly: true}],
+  parserOptions: {sourceType: 'module'}
+});
 
 var rule = require('../../../lib/rules/prefer-arrow-functions'),
     RuleTester = require('eslint').RuleTester;
