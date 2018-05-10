@@ -1,5 +1,5 @@
 # eslint-plugin-prefer-arrow
-ESLint plugin to prefer arrow functions. By default, the plugin allows usage of `function` as a member of an Object's prototype, but this can be changed with the property `disallowPrototype`. Alternatively, with the `singleReturnOnly` option, this plugin only reports functions where converting to an arrow function would dramatically simplify the code.
+ESLint plugin to prefer arrow functions. By default, the plugin allows usage of `function` as a member of an Object's prototype, but this can be changed with the property `disallowPrototype`. Functions referencing `this` will also be allowed. Alternatively, with the `singleReturnOnly` option, this plugin only reports functions where converting to an arrow function would dramatically simplify the code.
 
 This plugin will automatically fix your code using ESLint's `--fix` option, as long as you use the `singleReturnOnly` option.
 

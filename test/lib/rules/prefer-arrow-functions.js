@@ -27,6 +27,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'var foo = (...args) => args',
     'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};',
     'class obj {constructor(foo){this.foo = foo;}}; obj.prototype = {func: function() {}};',
+    'var foo = function() { return this.bar; };',
     ...[
       'var foo = (bar) => {return bar();}',
       'function foo(bar) {bar()}',
