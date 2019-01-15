@@ -28,6 +28,8 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};',
     'class obj {constructor(foo){this.foo = foo;}}; obj.prototype = {func: function() {}};',
     'var foo = function() { return this.bar; };',
+    'function * testGenerator() { return yield 1; }',
+    
     ...[
       'var foo = (bar) => {return bar();}',
       'function foo(bar) {bar()}',
@@ -91,6 +93,12 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       [
         '/*1*/function/*2*/ /*3*/foo/*4*/(/*5*/a/*6*/)/*7*/ /*8*/\{/*9*/ /*10*/return/*11*/ /*12*/false/*13*/;/*14*/ /*15*/}/*16*/',
         '/*1*/const/*2*/ /*3*/foo/*4*/ = (/*5*/a/*6*/)/*7*/ /*8*/=> /*9*/ /*10*//*11*/ /*12*/false/*13*//*14*/ /*15*/;/*16*/'
+      ],
+
+      // Make sure we don't mess up inner generator functions
+      [
+        'function foo() { return function * gen() { return yield 1; }; }',
+        'const foo = () => function * gen() { return yield 1; };'
       ]
     ].map(inputOutput => Object.assign(
       {
