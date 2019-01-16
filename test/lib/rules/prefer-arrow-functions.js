@@ -99,6 +99,20 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       [
         'function foo() { return function * gen() { return yield 1; }; }',
         'const foo = () => function * gen() { return yield 1; };'
+      ],
+
+      // Make sure we don't mess with the semicolon in for statements 
+      [
+        'function withLoop() { return () => { for (i = 0; i < 5; i++) {}}}',
+        'const withLoop = () => () => { for (i = 0; i < 5; i++) {}};'
+      ],
+      [
+        'var withLoop = function() { return () => { for (i = 0; i < 5; i++) {}}}',
+        'var withLoop = () => () => { for (i = 0; i < 5; i++) {}}'
+      ],
+      [
+        'function withLoop() { return () => { for (i = 0; i < 5; i++) {}} /* foo */; }',
+        'const withLoop = () => () => { for (i = 0; i < 5; i++) {}} /* foo */;'
       ]
     ].map(inputOutput => Object.assign(
       {
