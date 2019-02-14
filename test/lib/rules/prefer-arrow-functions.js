@@ -29,7 +29,10 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'class obj {constructor(foo){this.foo = foo;}}; obj.prototype = {func: function() {}};',
     'var foo = function() { return this.bar; };',
     'function * testGenerator() { return yield 1; }',
-    
+    'const foo = { get bar() { return "test"; } }',
+    'const foo = { set bar(xyz) {} }',
+    'class foo { get bar() { return "test"; } }',
+    'class foo { set bar(xyz) { } }',
     ...[
       'var foo = (bar) => {return bar();}',
       'function foo(bar) {bar()}',
