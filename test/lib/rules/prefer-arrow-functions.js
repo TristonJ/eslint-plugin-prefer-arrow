@@ -33,6 +33,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'const foo = { set bar(xyz) {} }',
     'class foo { get bar() { return "test"; } }',
     'class foo { set bar(xyz) { } }',
+    'class foo { bar() { return "test" } }',
     ...[
       'var foo = (bar) => {return bar();}',
       'function foo(bar) {bar()}',
@@ -45,7 +46,13 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       'var MyClass = { foo(bar) {bar(); return bar()} }',
       'export default function xyz() { return 3; }',
       'class MyClass { render(a, b) { return 3; } }'
-    ].map(singleReturnOnly)
+    ].map(singleReturnOnly),
+    ...[
+      'const foo = async bar => bar;',
+      'const foo = async bar => await Promise.resolve(2);',
+      'const foo = async (a, b) => { return await Promise.resolve(2); }',
+      'class MyClass { async foo(bar) { return bar; } }',
+    ].map(code => ({ code, parserOptions: { ecmaVersion: 2017 } }))
   ],
   invalid: [
     {code: 'function foo() { return "Hello!"; }', errors: ['Use const or class constructors instead of named functions']},
@@ -54,8 +61,25 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]},
     ...[
-      // Make sure it works with ES6 classes & functions declared in object literals
-      ['class MyClass { render(a, b) { return 3; } }', 'class MyClass { render = (a, b) => 3; }', {classPropertiesAllowed: true}],
+      // Make sure it works with ES6 classes & functions declared in object literals (Babel only)
+      [
+        'class MyClass { render(a, b) { return 3; } }',
+        'class MyClass { render = (a, b) => 3; }',
+        { classPropertiesAllowed: true },
+        { parser: require.resolve('babel-eslint') },
+      ],
+      [
+        'class MyClass { async render(a, b) { return 3; } }',
+        'class MyClass { render = async (a, b) => 3; }',
+        { classPropertiesAllowed: true },
+        { parser: require.resolve('babel-eslint') },
+      ],
+      [
+        'class MyClass {async render(a, b) { return 3; } }',
+        'class MyClass {render = async (a, b) => 3; }',
+        { classPropertiesAllowed: true },
+        { parser: require.resolve('babel-eslint') },
+      ],
       ['var MyClass = { render(a, b) { return 3; }, b: false }', 'var MyClass = { render: (a, b) => 3, b: false }'],
 
       // Make sure named function declarations work
@@ -116,13 +140,34 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       [
         'function withLoop() { return () => { for (i = 0; i < 5; i++) {}} /* foo */; }',
         'const withLoop = () => () => { for (i = 0; i < 5; i++) {}} /* foo */;'
-      ]
+      ],
+
+      // Support async / await syntax
+      ...[
+        ['async function foo() { return "bar" }', 'const foo = async () => "bar";'],
+        ['var foo = async function() { return "bar" };', 'var foo = async () => "bar";'],
+        [
+          'async function foo() { return await Promise.resolve("bar"); }',
+          'const foo = async () => await Promise.resolve("bar");'
+        ],
+        [
+          'var foo = async function() { return await Promise.resolve("bar") };',
+          'var foo = async () => await Promise.resolve("bar");'
+        ],
+      ].map(asyncTest => [...asyncTest, null, { parserOptions: { ecmaVersion: 2017 } }])
     ].map(inputOutput => Object.assign(
       {
         errors: ['Prefer using arrow functions over plain functions which only return a value'],
-        output: inputOutput[1]
+        output: inputOutput[1],
+        ...(inputOutput[3] || {}),
       },
-      singleReturnOnly(inputOutput[0], inputOutput[2])
+      {
+        ...singleReturnOnly(inputOutput[0], inputOutput[2]),
+        parserOptions: {
+          ...singleReturnOnly(inputOutput[0], inputOutput[2]).parserOptions,
+          ...((inputOutput[3] || {}).parserOptions || {})
+        },
+      }
     ))
   ]
 });
