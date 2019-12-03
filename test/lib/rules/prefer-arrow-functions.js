@@ -156,15 +156,39 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
         ],
       ].map(asyncTest => [...asyncTest, null, { parserOptions: { ecmaVersion: 2017 } }]),
 
-      // Support typescript typings
+      // Support fixes with typescript typings
       ...[
         [
           'const foo = { bar(x: string) { return "bar"; } }',
-          'const foo = { bar: (x: string) => "bar" }',
+          'const foo = { bar: (x: string) => "bar" }'
         ],
         [
-          'function foo(x: string): string { return x }',
-          'const foo = (x: string): string => x;',
+          'const foo = { bar(x: string): string { return "bar"; } }',
+          'const foo = { bar: (x: string): string => "bar" }'
+        ],
+        [
+          'function foo(x: string): string { return x; }',
+          'const foo = (x: string): string => x;'
+        ],
+        [
+          'async function foo(x: number): Promise<number> { return x; }',
+          'const foo = async (x: number): Promise<number> => x;'
+        ],
+        [
+          'const nested = { foo: { bar(name: string) { return name; } } }',
+          'const nested = { foo: { bar: (name: string) => name } }',
+        ],
+        [
+          'const foo = function x(n: number): number { return n + 1; };',
+          'const foo = (n: number): number => n + 1;',
+        ],
+        [
+          'export function test(str: string): string { return str; }',
+          'export const test = (str: string): string => str;',
+        ],
+        [
+          'function str(n: number) { return n as string; }',
+          'const str = (n: number) => n as string;',
         ]
       ].map(test => [...test, null, { parser: require.resolve('@typescript-eslint/parser') }])
     ].map(inputOutput => Object.assign(
