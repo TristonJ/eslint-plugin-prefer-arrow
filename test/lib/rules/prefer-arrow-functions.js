@@ -81,7 +81,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
         { parser: require.resolve('babel-eslint') },
       ],
       ['var MyClass = { render(a, b) { return 3; }, b: false }', 'var MyClass = { render: (a, b) => 3, b: false }'],
-
+      ['const foo = { barProp() { return "bar"; } };', 'const foo = { barProp: () => "bar" };'],
       // Make sure named function declarations work
       ['function foo() { return 3; }', 'const foo = () => 3;'],
       ['function foo(a) { return 3 }', 'const foo = (a) => 3;'],
@@ -154,7 +154,43 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
           'var foo = async function() { return await Promise.resolve("bar") };',
           'var foo = async () => await Promise.resolve("bar");'
         ],
-      ].map(asyncTest => [...asyncTest, null, { parserOptions: { ecmaVersion: 2017 } }])
+      ].map(asyncTest => [...asyncTest, null, { parserOptions: { ecmaVersion: 2017 } }]),
+
+      // Support fixes with typescript typings
+      ...[
+        [
+          'const foo = { bar(x: string) { return "bar"; } }',
+          'const foo = { bar: (x: string) => "bar" }'
+        ],
+        [
+          'const foo = { bar(x: string): string { return "bar"; } }',
+          'const foo = { bar: (x: string): string => "bar" }'
+        ],
+        [
+          'function foo(x: string): string { return x; }',
+          'const foo = (x: string): string => x;'
+        ],
+        [
+          'async function foo(x: number): Promise<number> { return x; }',
+          'const foo = async (x: number): Promise<number> => x;'
+        ],
+        [
+          'const nested = { foo: { bar(name: string) { return name; } } }',
+          'const nested = { foo: { bar: (name: string) => name } }',
+        ],
+        [
+          'const foo = function x(n: number): number { return n + 1; };',
+          'const foo = (n: number): number => n + 1;',
+        ],
+        [
+          'export function test(str: string): string { return str; }',
+          'export const test = (str: string): string => str;',
+        ],
+        [
+          'function str(n: number) { return n as string; }',
+          'const str = (n: number) => n as string;',
+        ]
+      ].map(test => [...test, null, { parser: require.resolve('@typescript-eslint/parser') }])
     ].map(inputOutput => Object.assign(
       {
         errors: ['Prefer using arrow functions over plain functions which only return a value'],
