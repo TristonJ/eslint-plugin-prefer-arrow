@@ -81,7 +81,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
         { parser: require.resolve('babel-eslint') },
       ],
       ['var MyClass = { render(a, b) { return 3; }, b: false }', 'var MyClass = { render: (a, b) => 3, b: false }'],
-
+      ['const foo = { barProp() { return "bar"; } };', 'const foo = { barProp: () => "bar" };'],
       // Make sure named function declarations work
       ['function foo() { return 3; }', 'const foo = () => 3;'],
       ['function foo(a) { return 3 }', 'const foo = (a) => 3;'],
@@ -154,7 +154,19 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
           'var foo = async function() { return await Promise.resolve("bar") };',
           'var foo = async () => await Promise.resolve("bar");'
         ],
-      ].map(asyncTest => [...asyncTest, null, { parserOptions: { ecmaVersion: 2017 } }])
+      ].map(asyncTest => [...asyncTest, null, { parserOptions: { ecmaVersion: 2017 } }]),
+
+      // Support typescript typings
+      ...[
+        [
+          'const foo = { bar(x: string) { return "bar"; } }',
+          'const foo = { bar: (x: string) => "bar" }',
+        ],
+        [
+          'function foo(x: string): string { return x }',
+          'const foo = (x: string): string => x;',
+        ]
+      ].map(test => [...test, null, { parser: require.resolve('@typescript-eslint/parser') }])
     ].map(inputOutput => Object.assign(
       {
         errors: ['Prefer using arrow functions over plain functions which only return a value'],

@@ -16,9 +16,11 @@
     "eslint": ">=2.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^2.4.0",
     "babel-eslint": "^10.0.3",
     "eslint": ">=2.0.0",
-    "mocha": "^3.4.1"
+    "mocha": "^3.4.1",
+    "typescript": "^3.6.4"
   },
   "keywords": [
     "eslint",
