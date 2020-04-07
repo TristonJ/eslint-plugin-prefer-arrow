@@ -52,7 +52,19 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       'const foo = async bar => await Promise.resolve(2);',
       'const foo = async (a, b) => { return await Promise.resolve(2); }',
       'class MyClass { async foo(bar) { return bar; } }',
-    ].map(code => ({ code, parserOptions: { ecmaVersion: 2017 } }))
+    ].map(code => ({ code, parserOptions: { ecmaVersion: 2017 } })),
+
+    // Valid tests for "allowStandaloneDeclarations" option
+    {code: 'function foo() { return "bar"; }', options: [{ allowStandaloneDeclarations: true }]},
+    {code: 'function * fooGen() { return yield "bar"; }', options: [{ allowStandaloneDeclarations: true }]},
+    {code: 'async function foo() { return await "bar"; }', options: [{ allowStandaloneDeclarations: true }], parserOptions: { ecmaVersion: 2017 }},
+    {code: 'function foo() { return () => "bar"; }', options: [{ allowStandaloneDeclarations: true }]},
+    {
+      // Make sure "allowStandaloneDeclarations" works with typescript
+      code: 'function foo(a: string): string { return `bar ${a}`;}',
+      options: [{ allowStandaloneDeclarations: true }],
+      parser: require.resolve('@typescript-eslint/parser')
+    }
   ],
   invalid: [
     {code: 'function foo() { return "Hello!"; }', errors: ['Use const or class constructors instead of named functions']},
@@ -60,6 +72,28 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     {code: 'var foo = function() { return "World"; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]},
+
+    // Invalid tests for "allowStandaloneDeclarations" option
+    {code: 'var foo = function() { return "bar"; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowStandaloneDeclarations: true }]},
+    {code: 'class FooClass { foo() { return "bar" }}', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowStandaloneDeclarations: true, classPropertiesAllowed: true }]},
+    {
+      // We are using multiple lines to check that it only errors on the inner function
+      code: `function top() {
+        return function inner() { return "bar"; };
+      }`,
+      errors: [{ message: 'Prefer using arrow functions over plain functions', line: 2 }],
+      options: [{ allowStandaloneDeclarations: true }]
+    },
+    {
+      // Make sure "allowStandaloneDeclarations" works with typescript
+      code: `function foo(a: string): () => string {
+        return function() { return \`bar \${a}\`; };
+      }`,
+      errors: [{ message: 'Prefer using arrow functions over plain functions', line: 2}],
+      options: [{ allowStandaloneDeclarations: true }],
+      parser: require.resolve('@typescript-eslint/parser')
+    },
+    
     ...[
       // Make sure it works with ES6 classes & functions declared in object literals (Babel only)
       [
