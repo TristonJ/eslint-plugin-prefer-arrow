@@ -59,6 +59,24 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     {code: 'function * fooGen() { return yield "bar"; }', options: [{ allowStandaloneDeclarations: true }]},
     {code: 'async function foo() { return await "bar"; }', options: [{ allowStandaloneDeclarations: true }], parserOptions: { ecmaVersion: 2017 }},
     {code: 'function foo() { return () => "bar"; }', options: [{ allowStandaloneDeclarations: true }]},
+    {code: 'module.exports = function() { return "bar"; }',  options: [{ allowStandaloneDeclarations: true }]},
+    {code: 'module.exports.foo = function() { return "bar"; }',  options: [{ allowStandaloneDeclarations: true }]},
+    {code: 'exports.foo = function() { return "bar"; }',  options: [{ allowStandaloneDeclarations: true }]},
+    {
+      code: 'export function foo() { return "bar"; }',
+      options: [{ allowStandaloneDeclarations: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      code: 'export default function() { return "bar"; }',
+      options: [{ allowStandaloneDeclarations: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      code: 'export default function foo() { return "bar"; }',
+      options: [{ allowStandaloneDeclarations: true }],
+      parserOptions: { sourceType: 'module'},
+    },
     {
       // Make sure "allowStandaloneDeclarations" works with typescript
       code: 'function foo(a: string): string { return `bar ${a}`;}',
@@ -76,6 +94,7 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     // Invalid tests for "allowStandaloneDeclarations" option
     {code: 'var foo = function() { return "bar"; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowStandaloneDeclarations: true }]},
     {code: 'class FooClass { foo() { return "bar" }}', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowStandaloneDeclarations: true, classPropertiesAllowed: true }]},
+    {code: 'exports = function() { return "bar"; }',  options: [{ allowStandaloneDeclarations: true }], errors: ['Prefer using arrow functions over plain functions']},
     {
       // We are using multiple lines to check that it only errors on the inner function
       code: `function top() {
