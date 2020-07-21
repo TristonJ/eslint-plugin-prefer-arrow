@@ -82,6 +82,12 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       code: 'function foo(a: string): string { return `bar ${a}`;}',
       options: [{ allowStandaloneDeclarations: true }],
       parser: require.resolve('@typescript-eslint/parser')
+    },
+
+    {
+      code: 'class MyClass { constructor() { this.x = 0; } add = (y) => { this.x += y; }; }',
+      options: [{ classPropertiesAllowed: true }],
+      parser: require.resolve('babel-eslint')
     }
   ],
   invalid: [
@@ -257,6 +263,13 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
           ...((inputOutput[3] || {}).parserOptions || {})
         },
       }
-    ))
+    )),
+
+    {
+      code: 'class MyClass { constructor() { this.x = 0; } add(y) { this.x += y; } }',
+      errors: ['Prefer using arrow functions over plain functions'],
+      options: [{ classPropertiesAllowed: true }],
+      parser: require.resolve('babel-eslint')
+    }
   ]
 });
