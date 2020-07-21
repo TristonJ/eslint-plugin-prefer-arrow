@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-prefer-arrow",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Prefer arrow functions in most cases",
   "main": "index.js",
   "scripts": {
