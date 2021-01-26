@@ -34,6 +34,12 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
     'class foo { get bar() { return "test"; } }',
     'class foo { set bar(xyz) { } }',
     'class foo { bar() { return "test" } }',
+    'function foo() { return () => this; }',
+    'function foo() { return (bar = this) => bar; }',
+    'function foo(bar = this) { return bar; }',
+    'const foo = function () { return () => this; }',
+    'const foo = function () { return (bar = this) => bar; }',
+    'const foo = function (bar = this) { return bar; }',
     ...[
       'var foo = (bar) => {return bar();}',
       'function foo(bar) {bar()}',
@@ -93,6 +99,10 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
   invalid: [
     {code: 'function foo() { return "Hello!"; }', errors: ['Use const or class constructors instead of named functions']},
     {code: 'function foo() { return arguments; }', errors: ['Use const or class constructors instead of named functions']},
+    {code: 'function foo() { return function () { return this; }; }', errors: ['Use const or class constructors instead of named functions']},
+    {code: 'function foo() { return function (bar = this) { return bar; }; }', errors: ['Use const or class constructors instead of named functions']},
+    {code: 'const foo = function () { return function (bar = this) { return bar; }; }', errors: ['Prefer using arrow functions over plain functions']},
+    {code: 'const foo = function () { return function () { return this; }; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'var foo = function() { return "World"; }', errors: ['Prefer using arrow functions over plain functions']},
     {code: '["Hello", "World"].reduce(function(a, b) { return a + " " + b; })', errors: ['Prefer using arrow functions over plain functions']},
     {code: 'class obj {constructor(foo){this.foo = foo;}}; obj.prototype.func = function() {};', errors: ['Prefer using arrow functions over plain functions'], options: [{disallowPrototype:true}]},
