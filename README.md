@@ -21,16 +21,16 @@ Add the plugin to the `plugins` section and the rule to the `rules` section in y
 "plugins": [
   "prefer-arrow"
 ],
-"rules": [
+"rules": {
   "prefer-arrow/prefer-arrow-functions": [
-     "warn",
-     {
-       "disallowPrototype": true,
-       "singleReturnOnly": false,
-       "classPropertiesAllowed": false
-     }
-   ]
-]
+    "warn",
+    {
+      "disallowPrototype": true,
+      "singleReturnOnly": false,
+      "classPropertiesAllowed": false
+    }
+  ]
+}
 ```
 # Configuration
  * `disallowPrototype`: If set to true, the plugin will warn if `function` is used anytime. Otherwise, the plugin allows usage of `function` if it is a member of an Object's prototype.
