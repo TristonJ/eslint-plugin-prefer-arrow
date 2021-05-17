@@ -94,6 +94,35 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       code: 'class MyClass { constructor() { this.x = 0; } add = (y) => { this.x += y; }; }',
       options: [{ classPropertiesAllowed: true }],
       parser: require.resolve('babel-eslint')
+    },
+    // Valid tests for "allowNamedFunctions" option
+    {code: '() => { function foo() { return "bar"; } }', options: [{ allowNamedFunctions: true }]},
+    {code: '() => { function * fooGen() { return yield "bar"; } }', options: [{ allowNamedFunctions: true }]},
+    {code: '() => { async function foo() { return await "bar"; } }', options: [{ allowNamedFunctions: true }], parserOptions: { ecmaVersion: 2017 }},
+    {code: '() => { function foo() { return () => "bar"; } }', options: [{ allowNamedFunctions: true }]},
+    {code: '() => { module.exports = function() { return "bar"; } }',  options: [{ allowNamedFunctions: true }]},
+    {code: '() => { module.exports.foo = function() { return "bar"; } }',  options: [{ allowNamedFunctions: true }]},
+    {code: '() => { exports.foo = function() { return "bar"; } }',  options: [{ allowNamedFunctions: true }]},
+    {
+      code: '() => { export function foo() { return "bar"; } }',
+      options: [{ allowNamedFunctions: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      code: '() => { export default function() { return "bar"; } }',
+      options: [{ allowNamedFunctions: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      code: '() => { export default function foo() { return "bar"; } }',
+      options: [{ allowNamedFunctions: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      // Make sure "allowNamedFunctions" works with typescript
+      code: '() => { function foo(a: string): string { return `bar ${a}`;} }',
+      options: [{ allowNamedFunctions: true }],
+      parser: require.resolve('@typescript-eslint/parser')
     }
   ],
   invalid: [
