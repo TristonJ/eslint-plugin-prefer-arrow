@@ -149,7 +149,6 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
 
     // Invalid tests for "allowNamedFunctions" option
     {code: '() => { var foo = function() { return "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
-    {code: '() => { var foo = function*() { return yield "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
     {code: '() => { var foo = async function() { return await "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }], parserOptions: { ecmaVersion: 2017 }},
     {code: '() => { var foo = function() { return () => "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
     {code: '() => { var foo = function() { return "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
