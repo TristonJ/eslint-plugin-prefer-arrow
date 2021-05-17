@@ -37,6 +37,7 @@ Add the plugin to the `plugins` section and the rule to the `rules` section in y
  * `singleReturnOnly`: If set to true, the plugin will only warn for `function` declarations which *only* contain a return statement. These often look much better when declared as arrow functions without braces. Works well in conjunction with ESLint's built-in [arrow-body-style](http://eslint.org/docs/rules/arrow-body-style) set to `as-needed`.
  * `classPropertiesAllowed`: If set to true, the plugin will warn about functions which could be replaced with arrow functions defined as [class instance fields](https://github.com/jeffmo/es-class-static-properties-and-fields). Enable if you're using Babel's [transform-class-properties](https://babeljs.io/docs/plugins/transform-class-properties/) plugin.
  * `allowStandaloneDeclarations`: If set to true, the plugin will ignore top-level function declarations (the plugin will still warn about "inner" functions, for example, function declarations inside other functions).
+ * `allowNamedFunctions`: If set to true, the plugin will ignore named functions such as `function foo() {}`.
 
 # Autofixing
 
