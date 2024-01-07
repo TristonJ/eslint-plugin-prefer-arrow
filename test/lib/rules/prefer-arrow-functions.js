@@ -94,6 +94,24 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       code: 'class MyClass { constructor() { this.x = 0; } add = (y) => { this.x += y; }; }',
       options: [{ classPropertiesAllowed: true }],
       parser: require.resolve('babel-eslint')
+    },
+
+    // Valid tests for "allowNamedFunctions" option
+    {code: '() => { function foo() { return "bar"; } }', options: [{ allowNamedFunctions: true }]},
+    {code: '() => { function * fooGen() { return yield "bar"; } }', options: [{ allowNamedFunctions: true }]},
+    {code: '() => { async function foo() { return await "bar"; } }', options: [{ allowNamedFunctions: true }], parserOptions: { ecmaVersion: 2017 }},
+    {code: '() => { function foo() { return () => "bar"; } }', options: [{ allowNamedFunctions: true }]},
+    {code: 'class FooClass { foo() { return "bar" }}', options: [{ allowNamedFunctions: true }]},
+    {
+      code: 'export default () => { function foo() { return "bar"; } }',
+      options: [{ allowNamedFunctions: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      // Make sure "allowNamedFunctions" works with typescript
+      code: '() => { function foo(a: string): string { return `bar ${a}`;} }',
+      options: [{ allowNamedFunctions: true }],
+      parser: require.resolve('@typescript-eslint/parser')
     }
   ],
   invalid: [
@@ -126,6 +144,39 @@ tester.run('lib/rules/prefer-arrow-functions', rule, {
       }`,
       errors: [{ message: 'Prefer using arrow functions over plain functions', line: 2}],
       options: [{ allowStandaloneDeclarations: true }],
+      parser: require.resolve('@typescript-eslint/parser')
+    },
+
+    // Invalid tests for "allowNamedFunctions" option
+    {code: '() => { var foo = function() { return "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
+    {code: '() => { var foo = async function() { return await "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }], parserOptions: { ecmaVersion: 2017 }},
+    {code: '() => { var foo = function() { return () => "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
+    {code: '() => { var foo = function() { return "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'], options: [{ allowNamedFunctions: true }]},
+    {code: 'module.exports = () => { var foo = function() { return "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'],  options: [{ allowNamedFunctions: true }]},
+    {code: 'module.exports.foo = () => { var bar = function() { return "baz"; }; }', errors: ['Prefer using arrow functions over plain functions'],  options: [{ allowNamedFunctions: true }]},
+    {code: '() => { exports.foo = function() { return "bar"; }; }', errors: ['Prefer using arrow functions over plain functions'],  options: [{ allowNamedFunctions: true }]},
+    {code: 'exports = function() { return "bar"; };', errors: ['Prefer using arrow functions over plain functions'],  options: [{ allowNamedFunctions: true }], errors: ['Prefer using arrow functions over plain functions']},
+    {
+      code: 'export default () => { var foo = function() { return "bar"; }; }',
+      errors: ['Prefer using arrow functions over plain functions'],
+      options: [{ allowNamedFunctions: true }],
+      parserOptions: { sourceType: 'module'},
+    },
+    {
+      // We are using multiple lines to check that it only errors on the inner function
+      code: `function top() {
+        return function() { return "bar"; };
+      }`,
+      errors: [{ message: 'Prefer using arrow functions over plain functions', line: 2 }],
+      options: [{ allowNamedFunctions: true }]
+    },
+    {
+      // Make sure "allowNamedFunctions" works with typescript
+      code: `function foo(a: string): () => string {
+        return function() { return \`bar \${a}\`; };
+      }`,
+      errors: [{ message: 'Prefer using arrow functions over plain functions', line: 2}],
+      options: [{ allowNamedFunctions: true }],
       parser: require.resolve('@typescript-eslint/parser')
     },
     
